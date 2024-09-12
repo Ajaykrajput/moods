@@ -32,7 +32,7 @@ const dayList = [
 const fugaz = Fugaz_One({ subsets: ["latin"], weight: ["400"] });
 
 export default function Calendar(props) {
-  const { demo, completeData, handleSetMood } = props;
+  const { demo, completeData, setNote, setIsOpen, setSelectedDayData } = props;
   const now = new Date();
   const currMonth = now.getMonth();
   const [selectedMonth, setSelectMonth] = useState(
@@ -125,13 +125,43 @@ export default function Calendar(props) {
                 }
 
                 let color = demo
-                  ? gradients.indigo[baseRating[dayIndex]]
+                  ? gradients.indigo[baseRating[dayIndex]?.mood]
                   : dayIndex in data
-                  ? gradients.indigo[data[dayIndex]]
+                  ? gradients.indigo[data[dayIndex]?.mood]
                   : "white";
+
+                // let color;
+                // if (demo) {
+                //   color = gradients.indigo[baseRating[dayIndex]?.mood];
+                // } else if (data[dayIndex]?.mood === 1) {
+                //   color = "#FF4C4C";
+                // } else if (data[dayIndex]?.mood === 2) {
+                //   color = "#FF7F50";
+                // } else if (data[dayIndex]?.mood === 3) {
+                //   color = "#FFD700";
+                // } else if (data[dayIndex]?.mood === 4) {
+                //   color = "#ADFF2F";
+                // } else if (data[dayIndex]?.mood === 5) {
+                //   color = "green";
+                // } else {
+                //   color = "white";
+                // }
 
                 return (
                   <div
+                    onClick={() => {
+                      if (data[dayIndex]?.mood) {
+                        setIsOpen(true);
+                        setNote(data[dayIndex]?.note);
+                        setSelectedDayData([
+                          data[dayIndex],
+                          dayIndex,
+                          numericMonth,
+                          selectedYear,
+                        ]);
+                      }
+                    }}
+                    title={data[dayIndex]?.note}
                     style={{ background: color }}
                     className={
                       "text-xs sm:text-sm border border-solid p-2 flex items-center gap-2 justify-between rounded-lg " +
